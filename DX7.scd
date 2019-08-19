@@ -627,7 +627,7 @@ defme = { arg note, vel;
 	a;
 
 };
-noteParser = { arg vel, note;
+noteParser = { arg vel, note, outMult;
 	1.do { arg yxx;
 			if(vel > 0,
 				{
@@ -649,7 +649,8 @@ noteParser = { arg vel, note;
 							headno.set(defjamHead0.())
 						});
 					});
-					noteArrayDX7[note] = Synth(\DX7 ,defme.value(note, vel),novaDX7);
+					noteArrayDX7[note] = Synth(\DX7 ,defme.value(note, vel), novaDX7);
+                    noteArrayDX7[note].set(\outMult, outMult);
 					//noteArrayDX7[note] = Synth(\DX7 ,defme.value(note, vel), novaDX7); //orjburayi addtotail diye degistirdin
 
 				},
@@ -675,7 +676,7 @@ r = File("DX7.afx".resolveRelative,"r");
 	dx7patches[item] = r.getLine;
 });
 
-mainCaller = { arg note, vel, preset;
+mainCaller = { arg note, vel, preset, outMult;
 	if(vel > 0,{
 		var g = dx7patches[preset%16384];
 		145.do({arg item;
@@ -684,7 +685,7 @@ mainCaller = { arg note, vel, preset;
 			//~midiOutDX7.control(~cirklonCCparse[item][0],~cirklonCCparse[item][1],k);
 		});
 	});
-	noteParser.value(vel, note)
+	noteParser.value(vel, note, outMult)
 };
 )
 
